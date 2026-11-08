@@ -1,19 +1,18 @@
-//! The native half of the app: the one thing the sandboxed extension cannot do,
-//! which is talking to the mouse.
+//! A control panel for the Lenovo Legion M410's lighting, as a bones app.
 //!
-//! - [`M410Module`] is the bus endpoint. It receives `m410/command`, answers
-//!   with `m410/state`, and does all device I/O on a worker thread.
-//! - [`Controller`] is what the worker runs: a small state machine over the
+//! - [`Backend`] runs the mouse on a worker thread behind two channels.
+//! - [`Controller`] is what that thread runs: a small state machine over the
 //!   [`Mouse`] trait, so everything interesting is testable without hardware.
-//! - [`UsbMouse`] is the real [`Mouse`], backed by the `m410` protocol crate.
+//! - [`gui`] is the interface: an egui module of this app's own, drawn through the
+//!   engine's `draw-target` service, with a theme that follows the desktop.
 
+mod backend;
 mod controller;
-mod convert;
-mod module;
+pub mod gui;
 mod mouse;
 mod snapshot;
 
+pub use backend::Backend;
 pub use controller::Controller;
-pub use module::{M410Module, ENDPOINT};
 pub use mouse::{Mouse, MouseError, UsbMouse};
-pub use snapshot::Snapshot;
+pub use snapshot::{Command, Snapshot, Status};

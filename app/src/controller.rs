@@ -1,6 +1,6 @@
-use m410_messages::{Command, Connection, Lighting, Status};
+use m410::{Connection, Lighting};
 
-use crate::{Mouse, MouseError, Snapshot};
+use crate::{Command, Mouse, MouseError, Snapshot, Status};
 
 /// How many polls a change waits for a sleeping mouse before it is dropped.
 /// A poll is 1.5 s of waiting plus an attempt that takes up to 4.5 s to fail
@@ -79,7 +79,7 @@ impl<M: Mouse> Controller<M> {
                 self.attempt();
             }
         } else {
-            let present = self.mouse.connection().unwrap_or(Connection::None);
+            let present = self.mouse.connection().ok();
             if present != self.shown.connection {
                 self.waits_left = MAX_WAITS;
                 self.attempt();
@@ -92,7 +92,7 @@ impl<M: Mouse> Controller<M> {
     fn attempt(&mut self) {
         let connection = match self.mouse.connection() {
             Ok(connection) => connection,
-            Err(error) => return self.fail(Connection::None, error),
+            Err(error) => return self.fail(None, error),
         };
         let result = match self.pending {
             Some(lighting) => self.mouse.write(&lighting).map(|()| lighting),
@@ -102,17 +102,17 @@ impl<M: Mouse> Controller<M> {
             Ok(lighting) => {
                 self.pending = None;
                 self.shown = Snapshot {
-                    connection,
+                    connection: Some(connection),
                     status: Status::Ready,
                     lighting: Some(lighting),
                     detail: String::new(),
                 };
             }
-            Err(error) => self.fail(connection, error),
+            Err(error) => self.fail(Some(connection), error),
         }
     }
 
-    fn fail(&mut self, connection: Connection, error: MouseError) {
+    fn fail(&mut self, connection: Option<Connection>, error: MouseError) {
         let lighting = self.shown.lighting;
         let (status, detail) = match error {
             MouseError::Asleep => {

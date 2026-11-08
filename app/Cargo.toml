@@ -2,6 +2,7 @@
 name = "legion-m410-linux-rgb-app"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
 publish = false
 
 [lib]
@@ -11,9 +12,12 @@ name = "m410_rgb_app"
 name = "legion-m410-linux-rgb"
 path = "src/main.rs"
 
+# The same composition as the bones example apps that own their interface: the
+# kernel with a window and renderer, plus an egui module of this app's own.
 [dependencies]
-bones-kernel = { git = "https://github.com/an-dr/bones", tag = "v4.0.0", features = ["wasm", "devtools"] }
+bones-kernel = { git = "https://github.com/an-dr/bones", tag = "v4.0.0", default-features = false, features = ["presentation", "devtools"] }
+egui = "0.32"
+egui-phosphor = { version = "0.10", default-features = false, features = ["regular"] }
+sdl3 = { version = "0.18.4", features = ["build-from-source-static", "unsafe_textures"] }
 m410 = { path = "../crates/m410" }
-m410-messages = { path = "../crates/messages" }
-# The bus codec the vocabulary is written against; the same tag the kernel uses.
-bones-messages = { git = "https://github.com/an-dr/bones", tag = "abi-v1.4.0" }
+dirs = "6"

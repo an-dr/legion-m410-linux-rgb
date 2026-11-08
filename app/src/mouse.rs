@@ -1,6 +1,4 @@
-use m410_messages::{Connection, Lighting};
-
-use crate::convert;
+use m410::{Connection, Lighting};
 
 /// Why the mouse could not be used.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -29,22 +27,30 @@ pub struct UsbMouse;
 
 impl Mouse for UsbMouse {
     fn connection(&mut self) -> Result<Connection, MouseError> {
-        let device = m410::Device::open().map_err(convert::mouse_error)?;
-        Ok(convert::connection(device.connection()))
+        m410::Device::open().map(|device| device.connection()).map_err(error)
     }
 
     fn read(&mut self) -> Result<Lighting, MouseError> {
-        let mut device = m410::Device::open().map_err(convert::mouse_error)?;
-        device
-            .lighting()
-            .map(|l| convert::lighting_to_wire(&l))
-            .map_err(convert::mouse_error)
+        m410::Device::open()
+            .and_then(|mut device| device.lighting())
+            .map_err(error)
     }
 
     fn write(&mut self, lighting: &Lighting) -> Result<(), MouseError> {
-        let mut device = m410::Device::open().map_err(convert::mouse_error)?;
-        device
-            .set_lighting(&convert::lighting_from_wire(lighting))
-            .map_err(convert::mouse_error)
+        m410::Device::open()
+            .and_then(|mut device| device.set_lighting(lighting))
+            .map_err(error)
     }
 }
+
+fn error(error: m410::Error) -> MouseError {
+    match error {
+        m410::Error::NotFound => MouseError::NotFound,
+        m410::Error::PermissionDenied(path) => MouseError::NoAccess(path.display().to_string()),
+        m410::Error::NoReply(_) => MouseError::Asleep,
+        other => MouseError::Failed(other.to_string()),
+    }
+}
+
+#[cfg(test)]
+mod tests;

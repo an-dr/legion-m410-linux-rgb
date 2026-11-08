@@ -1,6 +1,6 @@
 use std::sync::{Arc, Mutex};
 
-use m410_messages::{Effect, Lighting};
+use m410::{Effect, Lighting, Rgb};
 
 use super::*;
 
@@ -24,7 +24,7 @@ fn lighting(brightness: u8) -> Lighting {
         brightness,
         speed: 3,
         random: false,
-        color: (255, 0, 0),
+        color: Rgb(255, 0, 0),
     }
 }
 
@@ -69,7 +69,7 @@ fn refresh_reports_what_the_mouse_holds() {
     let snapshots = controller.handle(vec![Command::Refresh]);
     assert_eq!(snapshots.len(), 1);
     assert_eq!(snapshots[0].status, Status::Ready);
-    assert_eq!(snapshots[0].connection, Connection::Wireless);
+    assert_eq!(snapshots[0].connection, Some(Connection::Wireless));
     assert_eq!(snapshots[0].lighting, Some(lighting(4)));
 }
 
@@ -169,7 +169,7 @@ fn plugging_the_mouse_in_is_noticed_without_a_command() {
 
     controller.mouse.connection = Ok(Connection::Wired);
     let snapshot = controller.poll().expect("a new connection is a change");
-    assert_eq!(snapshot.connection, Connection::Wired);
+    assert_eq!(snapshot.connection, Some(Connection::Wired));
     assert_eq!(snapshot.status, Status::Ready);
 }
 
