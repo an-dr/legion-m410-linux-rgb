@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Legion M410 RGB
+Comment=Lighting control for the Lenovo Legion M410 mouse
+Exec=legion-m410-linux-rgb
+Icon=input-mouse
+Terminal=false
+Categories=Settings;HardwareSettings;
+Keywords=Lenovo;Legion;M410;RGB;mouse;lighting;

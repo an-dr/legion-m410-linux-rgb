@@ -1,0 +1,19 @@
+[package]
+name = "legion-m410-linux-rgb-app"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+name = "m410_rgb_app"
+
+[[bin]]
+name = "legion-m410-linux-rgb"
+path = "src/main.rs"
+
+[dependencies]
+bones-kernel = { git = "https://github.com/an-dr/bones", tag = "v4.0.0", features = ["wasm", "devtools"] }
+m410 = { path = "../crates/m410" }
+m410-messages = { path = "../crates/messages" }
+# The bus codec the vocabulary is written against; the same tag the kernel uses.
+bones-messages = { git = "https://github.com/an-dr/bones", tag = "abi-v1.4.0" }

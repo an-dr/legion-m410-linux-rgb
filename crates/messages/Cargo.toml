@@ -1,0 +1,13 @@
+[package]
+name = "m410-messages"
+description = "The bus vocabulary between the M410 native module and the UI extension"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+publish = false
+
+# Compiles for the native app and for wasm32-wasip2, so one crate sits under
+# both sides of the sandbox. It must not depend on anything native, which is why
+# it carries its own Lighting type instead of reusing the one from `m410`.
+[dependencies]
+bones-messages = { git = "https://github.com/an-dr/bones", tag = "abi-v1.4.0" }

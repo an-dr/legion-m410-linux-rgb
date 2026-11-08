@@ -1,0 +1,12 @@
+[package]
+name = "m410-panel"
+description = "The M410 control panel as pure data: layout, hit-testing, animation and draw commands"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+publish = false
+
+# Pure logic over the vocabulary, so it builds natively for its tests and for
+# wasm32-wasip2 inside the extension, which only turns its output into gfx messages.
+[dependencies]
+m410-messages = { path = "../messages" }

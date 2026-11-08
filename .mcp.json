@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "bones": {
+      "args": [
+        "mcp"
+      ],
+      "command": "bones-develop",
+      "type": "stdio"
+    }
+  }
+}

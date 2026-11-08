@@ -1,0 +1,4 @@
+# Lenovo Legion M410 Wireless RGB Gaming Mouse: let the logged-in user change its lighting
+# 6197: mouse on the USB cable, 6198: wireless receiver
+SUBSYSTEMS=="usb|hidraw", ATTRS{idVendor}=="17ef", ATTRS{idProduct}=="6197", TAG+="uaccess"
+SUBSYSTEMS=="usb|hidraw", ATTRS{idVendor}=="17ef", ATTRS{idProduct}=="6198", TAG+="uaccess"

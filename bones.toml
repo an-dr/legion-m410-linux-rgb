@@ -1,0 +1,9 @@
+# The engine configuration for legion-m410-linux-rgb. `bones-develop dev` starts the engine
+# with BONES_CONFIG pointing here, so paths resolve against this directory.
+
+extensions_dir = ".bones/extensions"
+saves_dir = ".bones/states"
+window_title = "legion-m410-linux-rgb"
+window_width = 460
+window_height = 720
+
