@@ -3,8 +3,9 @@ use m410_messages::{Command, Connection, Lighting, Status};
 use crate::{Mouse, MouseError, Snapshot};
 
 /// How many polls a change waits for a sleeping mouse before it is dropped.
-/// The worker polls about every 1.5 s, so this is roughly a minute.
-const MAX_WAITS: u32 = 40;
+/// A poll is 1.5 s of waiting plus an attempt that takes up to 4.5 s to fail
+/// against a sleeping mouse, so ten of them are about a minute.
+const MAX_WAITS: u32 = 10;
 
 /// Decides what to do with commands and with the passage of time.
 ///
